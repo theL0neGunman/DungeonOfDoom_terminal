@@ -16,7 +16,6 @@ public class MapReader {
     private void renderMap(String level) throws IOException {
         ArrayList<String> Grids = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(level))) {
-            goldToWin = Integer.parseInt(br.readLine().split(" ")[1]); //
             String grid;
             while ((grid = br.readLine()) != null) {
                 Grids.add(grid);
@@ -25,9 +24,16 @@ public class MapReader {
         row = Grids.size();
         col = Grids.getFirst().length();
         mapLevel = new char[row][col];
+        char[] test = null;
         for (int i = 0; i < row; ++i) {
             mapLevel[i] = Grids.get(i).toCharArray();
+            if (i == 1) {
+                test = Grids.get(i).toCharArray();
+            }
         }
+        goldToWin = test[test.length - 1] - '0';
+        System.out.println("Gold to win:" + goldToWin);
+
     }
 
     public int goldToWin() {
