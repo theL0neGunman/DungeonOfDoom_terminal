@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class MapReader {
     char[][] mapLevel;
     int row, col;
+    int goldToWin;
 
     public MapReader(String level) throws IOException {
         renderMap(level);
@@ -15,6 +16,7 @@ public class MapReader {
     private void renderMap(String level) throws IOException {
         ArrayList<String> Grids = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(level))) {
+            goldToWin = Integer.parseInt(br.readLine().split(" ")[1]); //
             String grid;
             while ((grid = br.readLine()) != null) {
                 Grids.add(grid);
@@ -26,6 +28,10 @@ public class MapReader {
         for (int i = 0; i < row; ++i) {
             mapLevel[i] = Grids.get(i).toCharArray();
         }
+    }
+
+    public int goldToWin() {
+        return goldToWin;
     }
 
     public char getCurrTile(int x, int y) {
@@ -44,7 +50,7 @@ public class MapReader {
     public void dispMap() {
         for (int i = 0; i < mapLevel.length; ++i) {
             char[] currRow = mapLevel[i];
-            System.out.print(new String(currRow)+'\n');
+            System.out.print(new String(currRow) + '\n');
         }
     }
 

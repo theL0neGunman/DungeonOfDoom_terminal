@@ -52,38 +52,38 @@ public class Bot extends Player {
 
     private void randomMove() {
         Random rand = new Random();
-        int[] directions = {-1,0,1};
+        int[] directions = {-1, 0, 1};
         int dx = directions[rand.nextInt(directions.length)];
         int dy = directions[rand.nextInt(directions.length)];
-        if(map.getCurrTile(x + dx, y + dy) == '.' || map.getCurrTile(x + dx, y + dy) == 'G') {
+        if (map.getCurrTile(x + dx, y + dy) == '.' || map.getCurrTile(x + dx, y + dy) == 'G') {
             move(dx, dy);
         }
     }
 
     private void move(int dx, int dy) {
-        int updateX = x+dx;
-        int updateY = y+dy;
-        if(map.getCurrTile(updateX, updateY) == '.' || map.getCurrTile(updateX, updateY) == 'G') {
+        int updateX = x + dx;
+        int updateY = y + dy;
+        if (map.getCurrTile(updateX, updateY) == '.' || map.getCurrTile(updateX, updateY) == 'G') {
             map.setCurrTile(updateX, updateY, '.');
-            x =updateX;
-            y =updateY;
-            map.setCurrTile(x,y, 'B');
+            x = updateX;
+            y = updateY;
+            map.setCurrTile(x, y, 'B');
         }
     }
 
 
     private void botPickGold() {
         ++gold;
-        map.setCurrTile(x,y, '.');
+        map.setCurrTile(x, y, '.');
         System.out.println("The bot has collected gold. It has: " + gold + " gold");
     }
 
 
-    public boolean botWinCond(){
-        return map.getCurrTile(x,y) == 'E' && gold >= 5 ;
+    public boolean botWinCond() {
+        return map.getCurrTile(x, y) == 'E' && gold >= map.goldToWin();
     }
 
-    public boolean capturedCond(int PlayerX, int PlayerY){
+    public boolean capturedCond(int PlayerX, int PlayerY) {
         return x == PlayerX && y == PlayerY;
     }
 }

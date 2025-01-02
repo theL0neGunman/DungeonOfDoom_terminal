@@ -82,7 +82,7 @@ public class ControlledPlayer extends Player {
     }
 
     public boolean winCondition() {
-        return map.getCurrTile(x, y) == 'E' && gold >= 5;
+        return map.getCurrTile(x, y) == 'E' && gold >= map.goldToWin();
     }
 
     private boolean exit() {
