@@ -1,5 +1,9 @@
+import java.util.Scanner;
+
 public class ControlledPlayer extends Player {
     int gold;
+    boolean goldFound = false;
+    boolean hasWonCond = false;
 
     public ControlledPlayer(MapReader map) {
         super(map);
@@ -12,11 +16,14 @@ public class ControlledPlayer extends Player {
         return 'P';
     }
 
-    public boolean executeInput(String input) {
+    public boolean executeInput(String input, Scanner scanFile) {
         input = input.toUpperCase();
         switch (input) {
+            case "HELLO":
+                System.out.println("Gold to win: " + map.goldToWin());
+                return true;
             case "LOOK":
-                look();
+                look(x, y);
                 return true;
             case "GOLD":
                 System.out.println("Amount of Gold owned: " + gold);
@@ -32,49 +39,70 @@ public class ControlledPlayer extends Player {
             case "MOVE W":
                 return move(0, -1);
             case "QUIT":
-                return exit();
+                return true;
+
             default:
                 System.out.println("Invalid input");
                 return false;
         }
-
-
     }
 
     private boolean move(int dx, int dy) {
         int X = x + dx;
         int Y = y + dy;
+        System.out.println(map.getCurrTile(X, Y) + "Current tile");
         if (map.getCurrTile(X, Y) != '#') {
-
-            if (map.getCurrTile(X, Y) == 'E' && gold < 5) {
+            if (map.getCurrTile(X, Y) == 'E' && gold < map.goldToWin()) {
                 System.out.println("More gold needed to win!");
                 return false;
             }
-            map.setCurrTile(x, y, '.');
+            if (map.getCurrTile(X, Y) == 'E' && gold >= map.goldToWin()) {
+                hasWonCond = true;
+            } else if (map.getCurrTile(X, Y) != 'E') {
+                hasWonCond = false;
+            }
+            map.setCurrTile(x, y, goldFound ? 'G' : '.');
+            goldFound = false;
             x = X;
             y = Y;
+            if (map.getCurrTile(X, Y) == 'G') {
+                goldFound = true;
+            }
             map.setCurrTile(x, y, 'P');
-            System.out.println("Move was successful");
             return true;
         }
         System.out.println("Move is not possible");
         return false;
     }
 
-    private void look() {
-        for (int i = x - 2; i <= x + 2; ++i) {
-            for (int j = y - 2; j <= y + 2; ++j) {
-                System.out.print(map.getCurrTile(i, j));
+    private void look(int x, int y) {
+        System.out.println("Looking.....:");
+        int gridSize = 5;
+        int halfGrid = gridSize / 2;
+
+
+        for (int i = x - halfGrid; i <= x + halfGrid; ++i) {
+            for (int j = y - halfGrid; j <= y + halfGrid; ++j) {
+                int row = map.getRow();
+                int col = map.getCol();
+                if (i == x && j == y) {
+                    System.out.print('P');
+                } else if (i >= 0 && i < row && j >= 0 && j < col) {
+                    System.out.print(map.getCurrTile(i, j));
+                } else {
+                    System.out.print('#');
+                }
             }
-            System.out.println();
+            System.out.println("\n"); // Newline after each row
         }
     }
 
     private boolean pickGold() {
-        if (map.getCurrTile(x, y) == 'G') {
+        if (map.getCurrTile(x, y) == 'G' || goldFound) {
             ++gold;
-            map.setCurrTile(x, y, '.');
+            map.setCurrTile(x, y, 'P');
             System.out.println("Picked up the Gold, Gold owned: " + gold);
+            goldFound = false;
             return true;
         }
         System.out.print("No gold was found");
@@ -82,15 +110,16 @@ public class ControlledPlayer extends Player {
     }
 
     public boolean winCondition() {
-        return map.getCurrTile(x, y) == 'E' && gold >= 5;
+        return hasWonCond;
     }
 
-    private boolean exit() {
+    private boolean exit(Scanner scanFile) {
         if (winCondition()) {
-            System.out.println("You win!");
+            System.out.println("Congragulations!, You win!");
         } else {
             System.out.println("You lose!");
         }
-        return true;
+        scanFile.close();
+        return false;
     }
 }
