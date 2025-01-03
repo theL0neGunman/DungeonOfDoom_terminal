@@ -3,12 +3,12 @@ import java.util.Scanner;
 public class Game {
 
     private MapReader map;
-    private ControlledPlayer player;
+    private Player player;
     private Bot bot;
 
     public Game(MapReader level) {
         map = level;
-        player = new ControlledPlayer(level);
+        player = new Player(level);
         bot = new Bot(level);
     }
 
@@ -28,7 +28,7 @@ public class Game {
                     if (player.winCondition() && input.toUpperCase().equals("QUIT")) {
                         System.out.println("Congratulations! You won!");
                         break;
-                    } else {
+                    } else if (input.toUpperCase().equals("QUIT") && !player.winCondition()) {
                         System.out.print("Sorry You loose!,Not enough gold");
                         break;
                     }
