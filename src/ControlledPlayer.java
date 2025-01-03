@@ -1,5 +1,6 @@
 public class ControlledPlayer extends Player {
     int gold;
+    boolean goldFound = false;
 
     public ControlledPlayer(MapReader map) {
         super(map);
@@ -37,24 +38,24 @@ public class ControlledPlayer extends Player {
                 System.out.println("Invalid input");
                 return false;
         }
-
-
     }
 
     private boolean move(int dx, int dy) {
         int X = x + dx;
         int Y = y + dy;
         if (map.getCurrTile(X, Y) != '#') {
-
-            if (map.getCurrTile(X, Y) == 'E' && gold < 5) {
+            if (map.getCurrTile(X, Y) == 'E' && gold < map.goldToWin()) {
                 System.out.println("More gold needed to win!");
                 return false;
             }
-            map.setCurrTile(x, y, '.');
+            map.setCurrTile(x, y, goldFound ? 'G' : '.');
+            goldFound = false;
             x = X;
             y = Y;
+            if (map.getCurrTile(X, Y) == 'G') {
+                goldFound = true;
+            }
             map.setCurrTile(x, y, 'P');
-            System.out.println("Move was successful");
             return true;
         }
         System.out.println("Move is not possible");
@@ -71,10 +72,11 @@ public class ControlledPlayer extends Player {
     }
 
     private boolean pickGold() {
-        if (map.getCurrTile(x, y) == 'G') {
+        if (map.getCurrTile(x, y) == 'G' || goldFound) {
             ++gold;
-            map.setCurrTile(x, y, '.');
+            map.setCurrTile(x, y, 'P');
             System.out.println("Picked up the Gold, Gold owned: " + gold);
+            goldFound = false;
             return true;
         }
         System.out.print("No gold was found");

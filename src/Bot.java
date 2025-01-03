@@ -3,6 +3,7 @@ import java.util.Random;
 public class Bot extends Player {
 
     int gold;
+    boolean goldFound = false;
 
 
     public Bot(MapReader map) {
@@ -26,12 +27,12 @@ public class Bot extends Player {
             }
         }
 
-        if (map.getCurrTile(x, y) == 'G') {
+        if (map.getCurrTile(x, y) == 'G' || goldFound) {
             botPickGold();
             return;
         }
-
-        if (rand.nextBoolean()) {
+        boolean randomBoolVal = rand.nextBoolean();
+        if (randomBoolVal) {
             moveBot(playerX, playerY);
         } else {
             randomMove();
@@ -64,9 +65,13 @@ public class Bot extends Player {
         int updateX = x + dx;
         int updateY = y + dy;
         if (map.getCurrTile(updateX, updateY) == '.' || map.getCurrTile(updateX, updateY) == 'G') {
-            map.setCurrTile(updateX, updateY, '.');
+            map.setCurrTile(x, y, goldFound ? 'G' : '.');
+            goldFound = false;
             x = updateX;
             y = updateY;
+            if (map.getCurrTile(updateX, updateY) == 'G') {
+                goldFound = true;
+            }
             map.setCurrTile(x, y, 'B');
         }
     }
@@ -74,10 +79,10 @@ public class Bot extends Player {
 
     private void botPickGold() {
         ++gold;
+        goldFound = false;
         map.setCurrTile(x, y, '.');
         System.out.println("The bot has collected gold. It has: " + gold + " gold");
     }
-
 
     public boolean botWinCond() {
         return map.getCurrTile(x, y) == 'E' && gold >= map.goldToWin();
