@@ -22,7 +22,7 @@ public class MapReader {
             }
         }
         row = Grids.size();
-        col = Grids.getFirst().length();
+        col = Grids.get(0).length();
         mapLevel = new char[row][col];
         char[] test = null;
         for (int i = 0; i < row; ++i) {
