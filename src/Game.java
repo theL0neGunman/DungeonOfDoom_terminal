@@ -16,8 +16,6 @@ public class Game {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             map.dispMap();
-
-            // Player turn
             System.out.print("\nPlayer please enter a command: ");
             String input = scanner.nextLine();
             if (player.executeInput(input)) {

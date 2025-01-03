@@ -16,8 +16,10 @@ public class ControlledPlayer extends Player {
     public boolean executeInput(String input) {
         input = input.toUpperCase();
         switch (input) {
+            case "HELLO":
+                System.out.println("Gold to win: " + map.goldToWin());
             case "LOOK":
-                look();
+                look(x, y);
                 return true;
             case "GOLD":
                 System.out.println("Amount of Gold owned: " + gold);
@@ -43,6 +45,7 @@ public class ControlledPlayer extends Player {
     private boolean move(int dx, int dy) {
         int X = x + dx;
         int Y = y + dy;
+        System.out.println(map.getCurrTile(X, Y) + "Current tile");
         if (map.getCurrTile(X, Y) != '#') {
             if (map.getCurrTile(X, Y) == 'E' && gold < map.goldToWin()) {
                 System.out.println("More gold needed to win!");
@@ -62,12 +65,25 @@ public class ControlledPlayer extends Player {
         return false;
     }
 
-    private void look() {
-        for (int i = x - 2; i <= x + 2; ++i) {
-            for (int j = y - 2; j <= y + 2; ++j) {
-                System.out.print(map.getCurrTile(i, j));
+    private void look(int x, int y) {
+        System.out.println("Looking.....:");
+        int gridSize = 5;
+        int halfGrid = gridSize / 2;
+
+
+        for (int i = x - halfGrid; i <= x + halfGrid; ++i) {
+            for (int j = y - halfGrid; j <= y + halfGrid; ++j) {
+                int row = map.getRow();
+                int col = map.getCol();
+                if (i == x && j == y) {
+                    System.out.print('P');
+                } else if (i >= 0 && i < row && j >= 0 && j < col) {
+                    System.out.print(map.getCurrTile(i, j));
+                } else {
+                    System.out.print('#');
+                }
             }
-            System.out.println();
+            System.out.println("\n"); // Newline after each row
         }
     }
 

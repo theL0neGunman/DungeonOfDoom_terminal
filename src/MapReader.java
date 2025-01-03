@@ -40,6 +40,7 @@ public class MapReader {
         return goldToWin;
     }
 
+
     public char getCurrTile(int x, int y) {
         if (x < 0 || x >= row || y < 0 || y >= col) {
             return '#';
@@ -54,9 +55,15 @@ public class MapReader {
     }
 
     public void dispMap() {
+
         for (int i = 0; i < mapLevel.length; ++i) {
             char[] currRow = mapLevel[i];
-            System.out.print(new String(currRow) + '\n');
+            if (i <= 1) {
+                System.out.print(new String(currRow) + '\n');
+            } else {
+                System.out.print("?".repeat(currRow.length) + '\n');
+            }
+
         }
     }
 
