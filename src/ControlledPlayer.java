@@ -1,6 +1,9 @@
+import java.util.Scanner;
+
 public class ControlledPlayer extends Player {
     int gold;
     boolean goldFound = false;
+    boolean hasWonCond = false;
 
     public ControlledPlayer(MapReader map) {
         super(map);
@@ -13,11 +16,12 @@ public class ControlledPlayer extends Player {
         return 'P';
     }
 
-    public boolean executeInput(String input) {
+    public boolean executeInput(String input, Scanner scanFile) {
         input = input.toUpperCase();
         switch (input) {
             case "HELLO":
                 System.out.println("Gold to win: " + map.goldToWin());
+                return true;
             case "LOOK":
                 look(x, y);
                 return true;
@@ -35,7 +39,8 @@ public class ControlledPlayer extends Player {
             case "MOVE W":
                 return move(0, -1);
             case "QUIT":
-                return exit();
+                return true;
+
             default:
                 System.out.println("Invalid input");
                 return false;
@@ -50,6 +55,11 @@ public class ControlledPlayer extends Player {
             if (map.getCurrTile(X, Y) == 'E' && gold < map.goldToWin()) {
                 System.out.println("More gold needed to win!");
                 return false;
+            }
+            if (map.getCurrTile(X, Y) == 'E' && gold >= map.goldToWin()) {
+                hasWonCond = true;
+            } else if (map.getCurrTile(X, Y) != 'E') {
+                hasWonCond = false;
             }
             map.setCurrTile(x, y, goldFound ? 'G' : '.');
             goldFound = false;
@@ -100,15 +110,16 @@ public class ControlledPlayer extends Player {
     }
 
     public boolean winCondition() {
-        return map.getCurrTile(x, y) == 'E' && gold >= map.goldToWin();
+        return hasWonCond;
     }
 
-    private boolean exit() {
+    private boolean exit(Scanner scanFile) {
         if (winCondition()) {
-            System.out.println("You win!");
+            System.out.println("Congragulations!, You win!");
         } else {
             System.out.println("You lose!");
         }
-        return true;
+        scanFile.close();
+        return false;
     }
 }

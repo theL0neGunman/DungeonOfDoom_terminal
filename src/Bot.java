@@ -78,10 +78,12 @@ public class Bot extends Player {
 
 
     private void botPickGold() {
-        ++gold;
-        goldFound = false;
-        map.setCurrTile(x, y, '.');
-        System.out.println("The bot has collected gold. It has: " + gold + " gold");
+        if (map.getCurrTile(x, y) == 'G' || goldFound) {
+            ++gold;
+            map.setCurrTile(x, y, 'B');
+            System.out.println("The bot has collected gold. It has: " + gold + " gold");
+            goldFound = false;
+        }
     }
 
     public boolean botWinCond() {

@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner scanFile = new Scanner(System.in);
         while (true) {
             System.out.println("Dungeon Of Doom");
             System.out.println("...................");
@@ -19,37 +20,41 @@ public class Main {
                 File file = mapsList[i];
                 if (file.isFile()) {
                     String fileName = getSplitName(file);
-                    System.out.println("FileName: " + fileName);
                     System.out.println((i) + ". " + fileName);
                 }
             }
-            Scanner scanFile = new Scanner(System.in);
             int choice = -1;
             int fullListLength = mapsList.length;
 
             while (choice < 0 || choice > mapsList.length) {
                 int listLength = fullListLength - 1;
-
                 System.out.print("Select a map by entering the number (0-" + listLength + "), or enter " + fullListLength + " to get help: ");
-                choice = scanFile.nextInt();
+                if (scanFile.hasNextInt()) {
+                    choice = scanFile.nextInt();
+                } else {
+                    System.out.println("Please enter a valid number");
+                    scanFile.nextLine();
+                }
             }
             if (choice == fullListLength) {
                 helpGuide();
-
-            } else {
+            } else if (choice < fullListLength) {
                 File selectedMap = mapsList[choice];
                 System.out.println("Selected Map: " + getSplitName(selectedMap));
                 try {
                     MapReader map = new MapReader(selectedMap.getPath());
                     Game game = new Game(map);
-                    game.start();
+                    game.start(scanFile);
                 } catch (Exception e) {
                     System.out.println("Error in loading the game: " + e.getMessage());
+                    break;
                 }
+                System.out.println("\nGame over. Returning to main menu...\n");
+                System.out.println("Press enter to continue...");
+                scanFile.nextLine();
             }
         }
-
-
+        scanFile.close();
     }
 
     public static String getSplitName(File file) {
@@ -71,6 +76,7 @@ public class Main {
         System.out.println("4. MOVE <N/W/S/E>: Lets the player character move in the specific direction \n");
         System.out.println("5. LOOK: Displays a grid of tiles near you on the map \n");
         System.out.println("7. QUIT: Allows you to exit the game\n");
+        System.out.println("Press Enter to continue....\n");
         Scanner scanner = new Scanner(System.in);
         scanner.nextLine();
     }

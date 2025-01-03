@@ -7,21 +7,34 @@ public class Game {
     private Bot bot;
 
     public Game(MapReader level) {
-        this.map = level;
+        map = level;
         player = new ControlledPlayer(level);
         bot = new Bot(level);
     }
 
-    public void start() {
-        Scanner scanner = new Scanner(System.in);
+    public void start(Scanner scanFile) {
+        map.dispMap();
+        System.out.print("\nPlayer please enter a command: ");
+
+
         while (true) {
-            map.dispMap();
-            System.out.print("\nPlayer please enter a command: ");
-            String input = scanner.nextLine();
-            if (player.executeInput(input)) {
-                if (player.winCondition()) {
-                    System.out.println("Congratulations! You won!");
-                    break;
+            String input = scanFile.nextLine().trim();
+            if (!input.isEmpty()) {
+                boolean executeInput = player.executeInput(input, scanFile);
+                if (executeInput) {
+                    map.dispMap();
+                    System.out.print("\nPlayer please enter a command: ");
+
+                    if (player.winCondition() && input.toUpperCase().equals("QUIT")) {
+                        System.out.println("Congratulations! You won!");
+                        break;
+                    } else {
+                        System.out.print("Sorry You loose!,Not enough gold");
+                        break;
+                    }
+                } else {
+                    System.out.println("Invalid!");
+                    continue;
                 }
             }
 
@@ -36,7 +49,6 @@ public class Game {
                 break;
             }
         }
-        scanner.close();
     }
 
 

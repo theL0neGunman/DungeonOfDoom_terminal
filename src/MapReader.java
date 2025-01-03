@@ -31,6 +31,7 @@ public class MapReader {
                 test = Grids.get(i).toCharArray();
             }
         }
+        assert test != null;
         goldToWin = test[test.length - 1] - '0';
         System.out.println("Gold to win:" + goldToWin);
 
@@ -55,7 +56,6 @@ public class MapReader {
     }
 
     public void dispMap() {
-
         for (int i = 0; i < mapLevel.length; ++i) {
             char[] currRow = mapLevel[i];
             if (i <= 1) {
@@ -66,6 +66,7 @@ public class MapReader {
 
         }
     }
+
 
     public int getRow() {
         return row;
