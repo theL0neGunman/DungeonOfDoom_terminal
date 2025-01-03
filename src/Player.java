@@ -1,21 +1,24 @@
 import java.util.Scanner;
-
+// Player class is a subclass of charactercontroller
 public class Player extends CharacterController {
     int gold;
     boolean goldFound = false;
     boolean hasWonCond = false;
 
+    // Initialize the map and gold
     public Player(MapReader map) {
         super(map);
         this.gold = 0;
 
     }
 
+    // method overriding of getCurrSymbol to represent the Player symbol 'P'
     @Override
     public char getCurrSymbol() {
         return 'P';
     }
 
+    // Executes the input command
     public boolean executeInput(String input, Scanner scanFile) {
         input = input.toUpperCase();
         switch (input) {
@@ -47,6 +50,7 @@ public class Player extends CharacterController {
         }
     }
 
+    // Move functionality to the player 1 tile based on its previous location
     private boolean move(int dx, int dy) {
         int X = x + dx;
         int Y = y + dy;
@@ -75,6 +79,7 @@ public class Player extends CharacterController {
         return true;
     }
 
+    // Allows the player to peak at the map but in a 5x5 area
     private void look(int x, int y) {
         System.out.println("Looking.....:");
         int gridSize = 5;
@@ -97,6 +102,7 @@ public class Player extends CharacterController {
         }
     }
 
+    // Helps pick up the gold when player is on the gold tile
     private boolean pickGold() {
         if (map.getCurrTile(x, y) == 'G' || goldFound) {
             ++gold;
@@ -109,17 +115,10 @@ public class Player extends CharacterController {
         return false;
     }
 
+    // Returns the win condtion
     public boolean winCondition() {
         return hasWonCond;
     }
 
-    private boolean exit(Scanner scanFile) {
-        if (winCondition()) {
-            System.out.println("Congragulations!, You win!");
-        } else {
-            System.out.println("You lose!");
-        }
-        scanFile.close();
-        return false;
-    }
+    
 }
