@@ -1,6 +1,7 @@
 import java.io.File;
 import java.util.Scanner;
 
+//Main starting point of the game, main class defines the menu of the game and allows user to input choice.
 public class Main {
     public static void main(String[] args) {
         Scanner scanFile = new Scanner(System.in);
@@ -8,14 +9,17 @@ public class Main {
             System.out.println("Dungeon Of Doom");
             System.out.println("...................");
             System.out.println("Please select the dungeon level");
-            File mapsFolder = new File("D:/Akshay's Workspace/CW2 Principles of Programming/dungeonofdoom/src/maps");
+            // Select the maps or level folder, path should be the working directory, (use "pwd" to get the path)
+            File mapsFolder = new File("/workspaces/DungeonOfDoom_terminal/src/maps");
             File[] mapsList = mapsFolder.listFiles();
 
+            //checking if there are no maps
             if (mapsList == null || mapsList.length == 0) {
                 System.out.println("No maps found");
                 return;
             }
 
+            // Looping thrhough the maps to get the file name of the maps
             for (int i = 0; i < mapsList.length; ++i) {
                 File file = mapsList[i];
                 if (file.isFile()) {
@@ -23,12 +27,14 @@ public class Main {
                     System.out.println((i) + ". " + fileName);
                 }
             }
+            //Logic for choosing the map along with choosing the help menu options to view player commands
             int choice = -1;
             int fullListLength = mapsList.length;
 
             while (choice < 0 || choice > mapsList.length) {
                 int listLength = fullListLength - 1;
-                System.out.print("Select a map by entering the number (0-" + listLength + "), or enter " + fullListLength + " to get help: ");
+                System.out.print("Select a map by entering the number (0-" + listLength + "), or enter "
+                        + fullListLength + " to get help: ");
                 if (scanFile.hasNextInt()) {
                     choice = scanFile.nextInt();
                 } else {
@@ -37,8 +43,9 @@ public class Main {
                 }
             }
             if (choice == fullListLength) {
-                helpGuide();
+                helpGuide(scanFile);
             } else if (choice < fullListLength) {
+                // selection of map based on the choice the player does
                 File selectedMap = mapsList[choice];
                 System.out.println("Selected Map: " + getSplitName(selectedMap));
                 try {
@@ -57,6 +64,7 @@ public class Main {
         scanFile.close();
     }
 
+    // A utility funtion created to help easily split filename to be shown or used in the main function
     public static String getSplitName(File file) {
         String fullName = file.getName();
         String[] splitFileName = fullName.split("\\.");
@@ -67,7 +75,8 @@ public class Main {
         return fileName;
     }
 
-    public static void helpGuide() {
+    //Function to show the help menu
+    public static void helpGuide(Scanner scanFile) {
         System.out.println("Player controls and guide");
         System.out.println("You should enter the commands in the terminal, the commands are:\n");
         System.out.println("1. HELLO: Shows the gold required to win the level\n");
@@ -77,7 +86,6 @@ public class Main {
         System.out.println("5. LOOK: Displays a grid of tiles near you on the map \n");
         System.out.println("7. QUIT: Allows you to exit the game\n");
         System.out.println("Press Enter to continue....\n");
-        Scanner scanner = new Scanner(System.in);
-        scanner.nextLine();
+        scanFile.nextLine();
     }
 }
